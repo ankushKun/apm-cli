@@ -1,12 +1,26 @@
 {
   "name": "apm-starter-package",
+  "description": "cli tool for ao package manager",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "apm": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "ao",
+    "arweave",
+    "apm",
+    "pacakge manager"
+  ],
+  "author": "ankushKun",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "figlet": "^1.7.0",
+    "inquirer": "^10.1.2"
+  }
 }
