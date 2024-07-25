@@ -27,6 +27,7 @@
     "commander": "^12.1.0",
     "figlet": "^1.7.0",
     "inquirer": "^10.1.2",
-    "ora": "^8.0.1"
+    "ora": "^8.0.1",
+    "terminal-link": "^3.0.0"
   }
 }

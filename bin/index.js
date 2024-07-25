@@ -4,6 +4,8 @@ import { program } from "commander"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import figlet from "figlet"
+import terminalLink from 'terminal-link';
+
 import fs from "fs"
 import { execSync } from "child_process"
 import pkg from "../package.json"  with { type: "json" }
@@ -35,8 +37,7 @@ function header({ clear = false } = {}) {
                 font: "Sub-Zero",
                 horizontalLayout: "fitted",
             })
-        ), "\n", chalk.blueBright(`Version ${pkg.version}\n\n`)
-    )
+        ), "\n", "Made with ♥️ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  v${pkg.version}\n\n`)
 }
 
 async function menu() {
