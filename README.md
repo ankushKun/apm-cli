@@ -7,10 +7,16 @@ The APM CLI is a command line interface for ao package manager to:
 - Update an existing package
 - Download a package locally
 
+## Installation
+
+```shell
+npm i -g apm-cli-tool
+```
+
 ## Usage
 
 ```shell
-npx apm <command> [options]
+apm <command> [arguments]
 ```
 
 ## Commands
