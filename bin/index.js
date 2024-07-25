@@ -10,6 +10,7 @@ import pkg from "../package.json"  with { type: "json" }
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
+program.option("-i, --init", "Create a new package boilerplate")
 program.option("-D, --download <package>", "Download a package")
 
 program.parse()
@@ -20,15 +21,29 @@ const opts = program.opts()
 if (Object.keys(opts).length === 0) {
     process.exit(await menu())
 } else {
-    if (opts.download) {
+    header()
+    if (opts.init) {
+        process.exit(await init())
+    } else if (opts.download) {
         console.log("Downloading", opts.download)
     }
 }
 
+function header({ clear = false } = {}) {
+    clear && console.clear()
+    console.log(
+        chalk.green(
+            figlet.textSync("APM CLI", {
+                font: "Sub-Zero",
+                horizontalLayout: "fitted",
+            })
+        ), "\n", chalk.blueBright(`Version ${pkg.version}\n\n`)
+    )
+}
 
 async function menu() {
     const MenuOptions = Object.freeze({
-        CREATE: "Create new package",
+        INIT: "Create new package boilerplate",
         REGISTER_VENDOR: "Register a new vendor",
         PUBLISH: "Publish a package",
         UPDATE: "Update an existing package",
@@ -36,15 +51,7 @@ async function menu() {
         EXIT: "Exit",
     })
 
-    // console.clear()
-    console.log(
-        chalk.green(
-            figlet.textSync("APM STARTER", {
-                font: "Sub-Zero",
-                horizontalLayout: "fitted",
-            })
-        ), "\n", chalk.blueBright(`Version ${pkg.version}\n\n`)
-    )
+    header({ clear: true })
 
     const { option } = await inquirer.prompt([
         {
@@ -56,8 +63,8 @@ async function menu() {
     ])
 
     switch (option) {
-        case MenuOptions.CREATE:
-            return await create()
+        case MenuOptions.INIT:
+            return await init()
         case MenuOptions.REGISTER_VENDOR:
             return await registerVendor()
         case MenuOptions.PUBLISH:
@@ -73,7 +80,7 @@ async function menu() {
     }
 }
 
-async function create() {
+async function init() {
 
     const boilerplate = {
         lua: `-- Sample package structure
