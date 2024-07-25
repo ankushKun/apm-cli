@@ -16,3 +16,7 @@ npx apm <command> [options]
 ## Commands
 
 - `init` - Create a new package boilerplate
+- `register-vendor` - Register a new vendor name or package
+- `publish` - Publish a new package
+- `update` - Update an existing package
+- `download` - Download a package locally
