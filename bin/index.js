@@ -165,15 +165,22 @@ This ao package boilerplate was generated with [create-apm-package](#)
             name: "license",
             message: "License:",
             default: "MIT",
-        },
-        {
-            type: "",
         }
     ])
 
+
+    const tags = in1.tags.split(",").map((tag) => tag.trim())
+    if (tags.length == 1 && tags[0] == "")
+        tags.pop()
+
     const pkgData = {
+        "$schema": "https://raw.githubusercontent.com/ankushKun/apm-cli/main/apm.schema.json",
         ...in1,
-        tags: in1.tags.split(",").map((tag) => tag.trim()),
+        tags,
+        warnings: {
+            modifiesGlobalState: false,
+            installMessage: ""
+        }
     }
 
     console.log("\n", chalk.blueBright(JSON.stringify(pkgData, null, 4)), "\n")
