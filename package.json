@@ -1,5 +1,5 @@
 {
-  "name": "apm-cli-tool",
+  "name": "apm-tool",
   "description": "cli tool for ao package manager",
   "repository": {
     "type": "git",

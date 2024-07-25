@@ -10,7 +10,7 @@ The APM CLI is a command line interface for ao package manager to:
 ## Installation
 
 ```shell
-npm i -g apm-cli-tool
+npm i -g apm-tool
 ```
 
 ## Usage

@@ -37,7 +37,7 @@ function header({ clear = false } = {}) {
                 font: "Sub-Zero",
                 horizontalLayout: "fitted",
             })
-        ), "\n", "Made with ♥️ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  v${pkg.version}\n\n`)
+        ), "\n", "Made with ♥ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  [v${pkg.version}]\n\n`)
 }
 
 async function menu() {
