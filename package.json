@@ -1,5 +1,5 @@
 {
-  "name": "apm-starter-package",
+  "name": "apm-starter-cli",
   "description": "cli tool for ao package manager",
   "version": "1.0.0",
   "type": "module",
