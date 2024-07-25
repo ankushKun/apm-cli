@@ -10,24 +10,22 @@ import pkg from "../package.json"  with { type: "json" }
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
-program.option("-i, --init", "Create a new package boilerplate")
-program.option("-D, --download <package>", "Download a package")
+// program.option("-i, --init", "Init a new package boilerplate")
+// program.option("-D, --download <package>", "Download a package")
 
-program.parse()
+//default command that will run when no command is specified
 
-const opts = program.opts()
+program.command("menu").description("Show main menu").action(menu)
+program.command("init").description("Create new package boilerplate").action(init)
+program.command("register-vendor").description("Register a new vendor").action(registerVendor)
+program.command("publish").description("Publish a package").action(publish)
+program.command("update").description("Update an existing package").action(update)
+program.command("download").description("Download an existing package").action(download)
 
-// check if no command was used
-if (Object.keys(opts).length === 0) {
-    process.exit(await menu())
-} else {
-    header()
-    if (opts.init) {
-        process.exit(await init())
-    } else if (opts.download) {
-        console.log("Downloading", opts.download)
-    }
-}
+if (process.argv.length === 2)
+    process.argv.splice(2, 0, 'menu')
+
+program.parse(process.argv)
 
 function header({ clear = false } = {}) {
     clear && console.clear()
