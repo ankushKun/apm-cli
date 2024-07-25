@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "vendor": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "tags": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "repository": {
+            "type": "string"
+        },
+        "license": {
+            "type": "string"
+        },
+        "warnings": {
+            "type": "object",
+            "properties": {
+                "modifiesGlobalState": {
+                    "type": "boolean"
+                },
+                "installMessage": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "modifiesGlobalState",
+                "installMessage"
+            ]
+        }
+    },
+    "required": [
+        "name",
+        "vendor",
+        "description",
+        "version",
+        "tags",
+        "repository",
+        "license"
+    ]
+}

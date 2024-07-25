@@ -12,11 +12,6 @@ import pkg from "../package.json"  with { type: "json" }
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
-// program.option("-i, --init", "Init a new package boilerplate")
-// program.option("-D, --download <package>", "Download a package")
-
-//default command that will run when no command is specified
-
 program.command("menu").description("Show main menu").action(menu)
 program.command("init").description("Create new package boilerplate").action(init)
 program.command("register-vendor").description("Register a new vendor").action(registerVendor)
@@ -171,6 +166,9 @@ This ao package boilerplate was generated with [create-apm-package](#)
             message: "License:",
             default: "MIT",
         },
+        {
+            type: "",
+        }
     ])
 
     const pkgData = {
@@ -191,8 +189,10 @@ This ao package boilerplate was generated with [create-apm-package](#)
 
     if (confirm.confirm) {
         fs.writeFileSync("apm.json", JSON.stringify(pkgData, null, 4))
-        fs.writeFileSync("main.lua", boilerplate.lua)
-        fs.writeFileSync("README.md", boilerplate.readme(pkgData.name))
+        if (!fs.existsSync("main.lua"))
+            fs.writeFileSync("main.lua", boilerplate.lua)
+        if (!fs.existsSync("README.md"))
+            fs.writeFileSync("README.md", boilerplate.readme(pkgData.name))
 
         const initGit = await inquirer.prompt([
             {
