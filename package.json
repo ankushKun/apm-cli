@@ -1,9 +1,9 @@
 {
-  "name": "apm-starter-cli",
+  "name": "apm-cli-test",
   "description": "cli tool for ao package manager",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ankushKun/apm-cli"
+    "url": "git://github.com/ankushKun/apm-cli.git"
   },
   "version": "1.0.1",
   "type": "module",
