@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-
-import { Argument, program } from "commander"
+process.env.NODE_NO_WARNINGS = 1
+import { program } from "commander"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import figlet from "figlet"
