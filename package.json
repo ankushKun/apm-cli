@@ -9,7 +9,7 @@
   "type": "module",
   "main": "./bin/index.js",
   "bin": {
-    "apm": "./bin/index.js"
+    "apm": "./dist/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -32,5 +32,11 @@
     "inquirer": "^10.1.2",
     "ora": "^8.0.1",
     "terminal-link": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/figlet": "^1.5.8",
+    "@types/node": "^22.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }

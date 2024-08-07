@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-process.env.NODE_NO_WARNINGS = 1
+
 import { program } from "commander"
 import chalk from "chalk"
 import inquirer from "inquirer"
@@ -9,7 +9,7 @@ import ora from "ora";
 
 import fs from "fs"
 import { execSync } from "child_process"
-import pkg from "../package.json"  with { type: "json" }
+import pkg from "../package.json" with { type: "json" }
 import { connect } from "@permaweb/aoconnect";
 
 const APM_PROCESS = "UdPDhw5S7pByV3pVqwyr1qzJ8mR8ktzi9olgsdsyZz4"
@@ -40,7 +40,7 @@ function header({ clear = false } = {}) {
         ), "\n", "Made with ♥ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  [v${pkg.version}]\n\n`)
 }
 
-async function menu() {
+async function menu(): Promise<void> {
     const MenuOptions = Object.freeze({
         INIT: "Create new package boilerplate",
         REGISTER_VENDOR: "Register a new vendor",
@@ -52,6 +52,7 @@ async function menu() {
 
     header({ clear: true })
 
+    // @ts-ignore
     const { option } = await inquirer.prompt([
         {
             type: "list",
@@ -73,9 +74,9 @@ async function menu() {
         case MenuOptions.DOWNLOAD:
             return await download()
         case MenuOptions.EXIT:
-            return 0
+            return
         default:
-            return menu()
+            return
     }
 }
 
@@ -90,22 +91,23 @@ function M.hello()
 end
 
 return M`,
-        readme: (pkgname) => `# ${pkgname}
+        readme: (pkgname: string) => `# ${pkgname}
 
 This ao package boilerplate was generated with [create-apm-package](#)
 ` }
 
     if (fs.existsSync("apm.json")) {
         console.log(chalk.red("apm.json file already exists."))
-        return 1
+        return
     }
+    // @ts-ignore
     const in1 = await inquirer.prompt([
         {
             type: "input",
             name: "name",
             message: "Package name:",
             required: true,
-            validate: (input) => {
+            validate: (input: string) => {
                 if (input.length < 3 || input.length > 20) {
                     return "Package name must be between 3 and 20 characters"
                 } else if (!/^[a-z0-9-]+$/i.test(input)) {
@@ -121,7 +123,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
             name: "vendor",
             message: "Vendor name:",
             default: "@apm",
-            validate: (input) => {
+            validate: (input: string) => {
                 if (!input) input = "@apm"
                 if (!/^@[\w-]+$/.test(input)) {
                     return "Vendor name should be in the format @vendor"
@@ -152,13 +154,13 @@ This ao package boilerplate was generated with [create-apm-package](#)
             type: "text",
             name: "tags",
             message: "Tags (comma separated upto 5):",
-            validate: (input) => {
+            validate: (input: string) => {
                 if (input.split(",").length > 5) {
                     return "Maximum 5 tags are allowed."
                 }
                 return true
             },
-            filter(input) { return input.split(",").map((tag) => tag.trim()) }
+            filter(input: string) { return input.split(",").map((tag) => tag.trim()) }
         },
         {
             type: "input",
@@ -174,7 +176,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
     ])
 
 
-    const tags = in1.tags.split(",").map((tag) => tag.trim())
+    const tags = in1.tags.split(",").map((tag: string) => tag.trim())
     if (tags.length == 1 && tags[0] == "")
         tags.pop()
 
@@ -190,6 +192,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
 
     console.log("\n", chalk.blueBright(JSON.stringify(pkgData, null, 4)), "\n")
 
+    // @ts-ignore
     const confirm = await inquirer.prompt([
         {
             type: "confirm",
@@ -206,6 +209,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
         if (!fs.existsSync("README.md"))
             fs.writeFileSync("README.md", boilerplate.readme(pkgData.name))
 
+        // @ts-ignore
         const initGit = await inquirer.prompt([
             {
                 type: "confirm",
@@ -225,7 +229,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
         }
 
         console.log(chalk.green("✅ apm package boilerplate created"))
-        return 0
+        return
 
     } else {
         console.log(chalk.red("❌ Package creation cancelled, restarting..."))
@@ -235,23 +239,24 @@ This ao package boilerplate was generated with [create-apm-package](#)
 
 async function registerVendor() {
     console.log("TODO")
-    return 0
+    return
 }
 
 async function publish() {
     console.log("TODO")
-    return 0
+    return
 
 }
 
 async function update() {
     console.log("TODO")
-    return 0
+    return
 
 }
 
-async function download(packageName) {
+async function download(packageName?: string) {
     if (!packageName) {
+        //@ts-ignore
         const { nameInput } = await inquirer.prompt([
             {
                 type: "input",
@@ -275,7 +280,9 @@ async function download(packageName) {
 
     if (Messages.length > 0) {
         const pkg = JSON.parse(Messages[0].Data)
-        const apmPkg = new APMPackage(pkg)
+        const apmPkg = pkg as APMPackage
+        apmPkg.README = Buffer.from(apmPkg.README, 'hex').toString()
+        apmPkg.Items = JSON.parse(Buffer.from(apmPkg.Items, 'hex').toString())
 
         if (!fs.existsSync("apm_modules"))
             fs.mkdirSync("apm_modules", { recursive: true })
@@ -289,7 +296,7 @@ async function download(packageName) {
 
         spinner.stop()
         var mainFound = false
-        apmPkg.Items.forEach((item) => {
+        apmPkg.Items.forEach((item: { meta: { name: string }, data: string }) => {
             const name = item.meta.name
             const data = item.data
             if (name == apmPkg.Main)
@@ -308,31 +315,25 @@ async function download(packageName) {
     }
 
 
-    return 0
+    return
 }
 
-
-class APMPackage {
-    constructor(pkgData) {
-        this.ID = pkgData.ID
-        this.Name = pkgData.Name
-        this.Owner = pkgData.Owner
-        this.Versions = pkgData.Versions
-        this.Main = pkgData.Main
-        this.RepositoryUrl = pkgData.RepositoryUrl
-        this.Updated = pkgData.Updated
-        this.Vendor = pkgData.Vendor
-        this.Installs = pkgData.Installs
-        this.Version = pkgData.Version
-        this.Authors = pkgData.Authors_
-        this.Dependencies = pkgData.Dependencies
-        this.Description = pkgData.Description
-        this.PkgID = pkgData.PkgID
-        this.Items = pkgData.Items
-        this.README = pkgData.README
-
-        //this.Items is a hex encoded string, decode it
-        this.Items = JSON.parse(Buffer.from(this.Items, 'hex').toString())
-        this.README = Buffer.from(this.README, 'hex').toString()
-    }
+interface APMPackage {
+    ID: string
+    Name: string
+    Owner: string
+    Versions: string[]
+    Main: string
+    RepositoryUrl: string
+    Updated: string
+    Vendor: string
+    Installs: number
+    Version: string
+    Authors: string[]
+    Dependencies: string[]
+    Description: string
+    PkgID: string
+    Items: any
+    README: string
 }
+
