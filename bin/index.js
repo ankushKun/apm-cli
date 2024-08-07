@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 
-import { program } from "commander"
+import { Argument, program } from "commander"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import figlet from "figlet"
 import terminalLink from 'terminal-link';
+import ora from "ora";
 
 import fs from "fs"
 import { execSync } from "child_process"
 import pkg from "../package.json"  with { type: "json" }
+import { connect } from "@permaweb/aoconnect";
+
+const APM_PROCESS = "UdPDhw5S7pByV3pVqwyr1qzJ8mR8ktzi9olgsdsyZz4"
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
@@ -18,6 +22,7 @@ program.command("register-vendor").description("Register a new vendor").action(r
 program.command("publish").description("Publish a package").action(publish)
 program.command("update").description("Update an existing package").action(update)
 program.command("download").description("Download an existing package").action(download)
+    .argument("<package-name>", "Package name to download")
 
 if (process.argv.length === 2)
     process.argv.splice(2, 0, 'menu')
@@ -245,8 +250,89 @@ async function update() {
 
 }
 
-async function download() {
-    console.log("TODO")
-    return 0
+async function download(packageName) {
+    if (!packageName) {
+        const { nameInput } = await inquirer.prompt([
+            {
+                type: "input",
+                name: "nameInput",
+                message: "Enter package name to download:",
+                required: true
+            }
+        ])
+        packageName = nameInput
+    }
 
+    const ao = connect()
+    const spinner = ora(`Fetching ${packageName}`).start()
+
+    const res = await ao.dryrun({
+        process: APM_PROCESS,
+        tags: [{ name: "Action", value: "APM.Info" }],
+        data: packageName
+    })
+    const { Messages, Output } = res;
+
+    if (Messages.length > 0) {
+        const pkg = JSON.parse(Messages[0].Data)
+        const apmPkg = new APMPackage(pkg)
+
+        if (!fs.existsSync("apm_modules"))
+            fs.mkdirSync("apm_modules", { recursive: true })
+        if (!fs.existsSync(`apm_modules/${apmPkg.Vendor}`))
+            fs.mkdirSync(`apm_modules/${apmPkg.Vendor}`, { recursive: true })
+        if (!fs.existsSync(`apm_modules/${apmPkg.Vendor}/${apmPkg.Name}`))
+            fs.mkdirSync(`apm_modules/${apmPkg.Vendor}/${apmPkg.Name}`, { recursive: true })
+
+        fs.writeFileSync(`apm_modules/${apmPkg.Vendor}/${apmPkg.Name}/apm.json`, JSON.stringify(apmPkg, null, 4))
+        fs.writeFileSync(`apm_modules/${apmPkg.Vendor}/${apmPkg.Name}/README.md`, apmPkg.README)
+
+        spinner.stop()
+        var mainFound = false
+        apmPkg.Items.forEach((item) => {
+            const name = item.meta.name
+            const data = item.data
+            if (name == apmPkg.Main)
+                mainFound = true
+
+            fs.writeFileSync(`apm_modules/${apmPkg.Vendor}/${apmPkg.Name}/${name}`, data)
+        })
+        if (!mainFound)
+            spinner.warn("Main file not found in package")
+        spinner.succeed(`Package ${apmPkg.Name} downloaded`)
+
+
+    } else {
+        const output = Output.data
+        spinner.fail(chalk.redBright(output))
+    }
+
+
+    return 0
+}
+
+
+class APMPackage {
+    constructor(pkgData) {
+        this.ID = pkgData.ID
+        this.Name = pkgData.Name
+        this.Owner = pkgData.Owner
+        this.Versions = pkgData.Versions
+        this.Main = pkgData.Main
+        this.RepositoryUrl = pkgData.RepositoryUrl
+        this.Updated = pkgData.Updated
+        this.Vendor = pkgData.Vendor
+        this.Installs = pkgData.Installs
+        this.Version = pkgData.Version
+        this.Authors = pkgData.Authors_
+        this.Dependencies = pkgData.Dependencies
+        this.Description = pkgData.Description
+        this.PkgID = pkgData.PkgID
+        this.Items = pkgData.Items
+        this.README = pkgData.README
+
+        //this.Items is a hex encoded string, decode it
+        this.Items = JSON.parse(Buffer.from(this.Items, 'hex').toString())
+        this.README = Buffer.from(this.README, 'hex').toString()
+    }
 }

@@ -26,3 +26,27 @@ apm <command> [arguments]
 - `publish` - Publish a new package
 - `update` - Update an existing package
 - `download` - Download a package locally
+
+### `init`
+
+> TODO
+
+### `register-vendor`
+
+> TODO
+
+### `publish`
+
+> TODO
+
+### `update`
+
+> TODO
+
+### `download`
+
+```shell
+apm download <@vendor/package@version>
+```
+
+this will download the package locally in the `apm_modules` directory.

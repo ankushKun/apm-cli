@@ -9,7 +9,7 @@
   "type": "module",
   "main": "./bin/index.js",
   "bin": {
-    "apm": "./bin/index.js"
+    "apm": "NODE_NO_WARNINGS=1 ./bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,11 +18,13 @@
     "ao",
     "arweave",
     "apm",
-    "pacakge manager"
+    "pacakge manager",
+    "BetterIDEa"
   ],
   "author": "ankushKun",
   "license": "MIT",
   "dependencies": {
+    "@permaweb/aoconnect": "^0.0.58",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "figlet": "^1.7.0",
