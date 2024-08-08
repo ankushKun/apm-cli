@@ -2,14 +2,14 @@
     "compilerOptions": {
         "target": "ES2023",
         "module": "ESNext",
-        "outDir": "./dist",
-        "rootDir": "./bin",
+        "outDir": "./bin",
+        "rootDir": "./src",
         "strict": true,
         "esModuleInterop": true,
         "moduleResolution": "node",
         "resolveJsonModule": true
     },
     "include": [
-        "bin/**/*"
+        "src/**/*"
     ]
 }
