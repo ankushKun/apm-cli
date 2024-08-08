@@ -9,11 +9,12 @@
   "type": "module",
   "main": "./bin/index.js",
   "bin": {
-    "apm": "./dist/index.js"
+    "apm": "./dist/index.js",
+    "apm-tool": "./dist/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "npx tsc && chmod +x ./dist/index.js"
   },
   "keywords": [
     "ao",
