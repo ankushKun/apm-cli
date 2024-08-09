@@ -8,7 +8,11 @@
   "version": "1.2.3",
   "type": "module",
   "maintainers": [
-    "ankushKun"
+    {
+      "name": "Ankush",
+      "email": "ankush4singh@gmail.com",
+      "url": "https://ankushKun.github.io"
+    }
   ],
   "main": "./bin/index.js",
   "bin": {
