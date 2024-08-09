@@ -1,6 +1,10 @@
-# APM CLI
+# APM CLI TOOL
 
-The APM CLI is a command line interface for ao package manager to:
+![Static Badge](https://img.shields.io/badge/apm--tool-a?style=flat&logo=npm&logoColor=red&color=lightgreen&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fapm-tool)
+[![downloads](https://img.shields.io/npm/dt/apm-tool?color=lightgreen)](https://www.npmjs.com/package/apm-tool)
+[![X Follow](https://img.shields.io/twitter/follow/betteridea_dev)](https://twitter.com/betteridea_dev)
+
+The `apm-tool` is a command line interface for ao package manager to:
 - Initialise new package boilerplate
 - Register a new vendor name
 - Register a new package
