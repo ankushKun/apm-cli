@@ -20,14 +20,9 @@
         },
         "tags": {
             "type": "array",
-            "items": [
-                {
-                    "type": "string"
-                },
-                {
-                    "type": "string"
-                }
-            ]
+            "items": {
+                "type": "string"
+            }
         },
         "repository": {
             "type": "string",
@@ -37,7 +32,16 @@
             "type": "string"
         },
         "dependencies": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string",
+                    "pattern": "^[0-9]+.[0-9]+.[0-9]+$"
+                }
+            }
         },
         "warnings": {
             "type": "object",

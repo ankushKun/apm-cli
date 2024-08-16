@@ -83,6 +83,11 @@ This ao package boilerplate was generated with [create-apm-package](#)
         console.log(chalk.red("apm.json file already exists."));
         return;
     }
+    var newDir = false;
+    if (fs.readdirSync(".").length > 0) {
+        console.log(chalk.red("Current directory is not empty, package will be created in a new directory"));
+        newDir = true;
+    }
     // @ts-ignore
     const in1 = await inquirer.prompt([
         {
@@ -184,6 +189,10 @@ This ao package boilerplate was generated with [create-apm-package](#)
         }
     ]);
     if (confirm.confirm) {
+        if (newDir) {
+            fs.mkdirSync(in1.name);
+            process.chdir(in1.name);
+        }
         fs.writeFileSync("apm.json", JSON.stringify(pkgData, null, 4));
         if (!fs.existsSync("main.lua"))
             fs.writeFileSync("main.lua", boilerplate.lua);
