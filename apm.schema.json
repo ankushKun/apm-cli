@@ -50,8 +50,9 @@
                 "properties": {
                     "version": {
                         "type": "string",
-                        "pattern": "^[0-9]+.[0-9]+.[0-9]+$",
-                        "description": "The version of the dependency"
+                        "description": "The version of the dependency | The message id of the published dependency",
+                        "pattern": "^[0-9]+.[0-9]+.[0-9]+$|^[a-zA-Z0-9-_]{43}$",
+                        "default": "1.0.0"
                     }
                 },
                 "required": [
@@ -82,6 +83,8 @@
         "version",
         "tags",
         "repository",
-        "license"
+        "license",
+        "dependencies",
+        "warnings"
     ]
 }
