@@ -21,7 +21,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc && chmod +x ./bin/index.js"
+    "build": "npx tsc && chmod +x ./bin/index.js",
+    "start": "npx tsc && chmod +x ./bin/index.js && ./bin/index.js"
   },
   "keywords": [
     "ao",
