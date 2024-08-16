@@ -9,8 +9,10 @@ import ora from "ora";
 
 import fs from "fs"
 import { execSync } from "child_process"
-import pkg from "../package.json" with { type: "json" }
+import pkg from "../package.json"
 import { connect } from "@permaweb/aoconnect";
+import { bundle } from "./bundle";
+// import { bundle, bundleString } from "luabundle";
 
 const APM_PROCESS = "UdPDhw5S7pByV3pVqwyr1qzJ8mR8ktzi9olgsdsyZz4"
 
@@ -254,6 +256,13 @@ async function registerVendor() {
 
 async function publish() {
     console.log("TODO")
+    if (!fs.existsSync("apm.json")) return console.error(chalk.red("apm.json file not found"))
+    const apmConfig = JSON.parse(fs.readFileSync("apm.json", 'utf-8'))
+    const entrypoint = apmConfig.main
+    if (!entrypoint) return console.error(chalk.red(`entrypoint not found in apm.json`))
+
+    const e = bundle(entrypoint)
+    console.log(e)
     return
 
 }
