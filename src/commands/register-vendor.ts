@@ -77,7 +77,7 @@ export default async function registerVendor() {
     })
     spinner.stop()
 
-    console.log(res)
+    // console.log(res)
     const { Messages, Output } = res
     if (Messages.length > 0) {
         const msg = Messages[0]
