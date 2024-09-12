@@ -38,6 +38,31 @@
             "format": "uri",
             "description": "The repository url of the package"
         },
+        "authors": {
+            "type": "array",
+            "description": "The authors of the package",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z0-9-_]{43}$"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "url": {
+                        "type": "string",
+                        "format": "uri"
+                    }
+                }
+            },
+            "default": []
+        },
         "license": {
             "type": "string",
             "description": "The license of the package",

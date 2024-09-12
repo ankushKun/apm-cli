@@ -3,23 +3,11 @@ import chalk from 'chalk'
 import fs from 'fs'
 import inquirer from 'inquirer'
 import { execSync } from 'child_process'
+import constants from '../constants'
+import { APMConfigJSON } from '../types/apm'
 
 
 export default async function init() {
-
-    const boilerplate = {
-        lua: `-- Sample package structure
-local M = {}
-
-function M.hello()
-  return "Hello, world!"
-end
-
-return M`,
-        readme: (pkgname: string) => `# ${pkgname}
-
-This ao package boilerplate was generated with [create-apm-package](#)
-` }
 
     if (fs.existsSync("apm.json")) {
         console.log(chalk.red("apm.json file already exists."))
@@ -111,10 +99,17 @@ This ao package boilerplate was generated with [create-apm-package](#)
     if (tags.length == 1 && tags[0] == "")
         tags.pop()
 
-    const pkgData = {
+    const pkgData: APMConfigJSON = {
         "$schema": "https://raw.githubusercontent.com/ankushKun/apm-cli/main/apm.schema.json",
-        ...in1,
+        name: in1.name,
+        vendor: in1.vendor,
+        description: in1.description,
+        main: "main.lua",
+        version: in1.version,
+        repository: in1.repository,
+        license: in1.license,
         tags,
+        authors: [],
         warnings: {
             modifiesGlobalState: false,
             installMessage: ""
@@ -140,9 +135,9 @@ This ao package boilerplate was generated with [create-apm-package](#)
         }
         fs.writeFileSync("apm.json", JSON.stringify(pkgData, null, 4))
         if (!fs.existsSync("main.lua"))
-            fs.writeFileSync("main.lua", boilerplate.lua)
+            fs.writeFileSync("main.lua", constants.defaults.src)
         if (!fs.existsSync("README.md"))
-            fs.writeFileSync("README.md", boilerplate.readme(pkgData.name))
+            fs.writeFileSync("README.md", constants.defaults.readme(pkgData.name))
 
         // @ts-ignore
         const initGit = await inquirer.prompt([
@@ -160,6 +155,7 @@ This ao package boilerplate was generated with [create-apm-package](#)
             execSync("git init")
             execSync("git add .")
             execSync("git commit -m 'Initialise ao package'")
+            fs.writeFileSync(".gitignore", constants.defaults.gitignore)
             console.log(chalk.green("✅ git repository initialized"))
         }
 

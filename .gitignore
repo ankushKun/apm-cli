@@ -6,3 +6,4 @@ node_modules
 apm_modules
 test-pkg
 bin/fonts
+wallet.json
