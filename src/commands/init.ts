@@ -72,11 +72,11 @@ export default async function init() {
         },
         {
             type: "text",
-            name: "tags",
-            message: "Tags (comma separated upto 5):",
+            name: "keywords",
+            message: "Keywords (comma separated upto 5):",
             validate: (input: string) => {
                 if (input.split(",").length > 5) {
-                    return "Maximum 5 tags are allowed."
+                    return "Maximum 5 keywords are allowed."
                 }
                 return true
             },
@@ -95,24 +95,46 @@ export default async function init() {
         }
     ])
 
-    const tags = in1.tags.split(",").map((tag: string) => tag.trim())
-    if (tags.length == 1 && tags[0] == "")
-        tags.pop()
+    const keywords = in1.keywords.split(",").map((kwd: string) => kwd.trim())
+    if (keywords.length == 1 && keywords[0] == "")
+        keywords.pop()
+
 
     const pkgData: APMConfigJSON = {
         "$schema": "https://raw.githubusercontent.com/ankushKun/apm-cli/main/apm.schema.json",
         name: in1.name,
         vendor: in1.vendor,
         description: in1.description,
-        main: "main.lua",
+        main: "source.lua",
         version: in1.version,
         repository: in1.repository,
         license: in1.license,
-        tags,
+        keywords,
         authors: [],
         warnings: {
             modifiesGlobalState: false,
             installMessage: ""
+        },
+        dependencies: {},
+
+    }
+
+    if (!fs.existsSync("wallet.json")) {
+        // @ts-ignore
+        const create = await inquirer.prompt([
+            {
+                type: "confirm",
+                name: "create",
+                message: "Wallet not found. Create a new wallet?",
+                default: true
+            }
+        ])
+        if (create.create) {
+            execSync("npx -y @permaweb/wallet > wallet.json")
+            console.log(chalk.green("✅ Wallet created"))
+            pkgData.wallet = "./wallet.json"
+        } else {
+            console.log(`Skipped wallet creation. Run ${chalk.red("npx -y @permaweb/wallet > wallet.json")} to create a new wallet and set its path in apm.json`)
         }
     }
 
@@ -134,8 +156,8 @@ export default async function init() {
             process.chdir(in1.name)
         }
         fs.writeFileSync("apm.json", JSON.stringify(pkgData, null, 4))
-        if (!fs.existsSync("main.lua"))
-            fs.writeFileSync("main.lua", constants.defaults.src)
+        if (!fs.existsSync("source.lua"))
+            fs.writeFileSync("source.lua", constants.defaults.src)
         if (!fs.existsSync("README.md"))
             fs.writeFileSync("README.md", constants.defaults.readme(pkgData.name))
 

@@ -3,24 +3,37 @@ export type Tag = {
     value: string
 }
 
+export type TDependencies = {
+    [key: string]: {
+        "version": string
+    }
+}
+
 export type APMPackage = {
     ID: string
-    Name: string
-    Owner: string
-    Versions: string[]
-    Main: string
-    RepositoryUrl: string
-    Updated: string
     Vendor: string
-    Installs: number
+    Name: string
     Version: string
-    Authors: string[]
-    Dependencies: string[]
+    Versions?: string[]
     Description: string
+    Owner: string
+    Readme: string
     PkgID: string
-    Items: any
-    README: string
+    Source: string
+    Authors: string[] | string
+    Dependencies: TDependencies | string
+    Repository: string
+    Timestamp: number
+    Installs: number
+    TotalInstalls: number
+    Keywords: string[]
+    IsFeatured: boolean
+    Warnings: {
+        modifiesGlobalState: boolean
+        installMessage: string
+    } | string
     License: string
+    Main?: string
 }
 
 export type APMConfigJSON = {
@@ -28,9 +41,10 @@ export type APMConfigJSON = {
     name: string
     vendor: string
     description: string
+    wallet?: string
     main: string
     version: string
-    tags: string[]
+    keywords: string[]
     authors: {
         address: string
         name: string

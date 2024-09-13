@@ -25,9 +25,14 @@
             "description": "The version of the package",
             "default": "1.0.0"
         },
-        "tags": {
+        "main": {
+            "type": "string",
+            "description": "The entrypoint of the package",
+            "default": "main.lua"
+        },
+        "keywords": {
             "type": "array",
-            "description": "The tags of the package (max 5)",
+            "description": "The keywords of the package (max 5)",
             "items": {
                 "type": "string"
             },
@@ -99,6 +104,10 @@
                 "modifiesGlobalState",
                 "installMessage"
             ]
+        },
+        "wallet": {
+            "description": "The wallet path",
+            "type": "string"
         }
     },
     "required": [
@@ -106,8 +115,7 @@
         "vendor",
         "description",
         "version",
-        "tags",
-        "repository",
+        "keywords",
         "license",
         "dependencies",
         "warnings"

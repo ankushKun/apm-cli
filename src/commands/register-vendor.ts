@@ -11,8 +11,9 @@ const vendorBlocklist = [
     "apm", "ao", "admin", "root", "system", "vendor", "vendors", "package", "packages"
 ]
 
-export default async function registerVendor() {
-    const ao = connect()
+export default async function registerVendor(name?: string) {
+
+
     // @ts-ignore
     const { vendor } = await inquirer.prompt([
         {
@@ -23,8 +24,8 @@ export default async function registerVendor() {
             validate: (input: string) => {
                 if (input.length < 3 || input.length > 20) {
                     return "Vendor name must be between 3 and 20 characters"
-                } else if (!/^[a-z0-9-]+$/i.test(input)) {
-                    return "Vendor name can only contain letters, numbers and hyphens"
+                } else if (!/^@[a-z0-9-]+$/i.test(input)) {
+                    return "Vendor name can only contain letters, numbers and hyphens and must start with an @"
                 } else if (vendorBlocklist.includes(input)) {
                     return "Vendor name is reserved"
                 }
@@ -64,6 +65,7 @@ export default async function registerVendor() {
 
     const spinner = ora(`Registering vendor ${chalk.green(vendor)}`).start()
 
+    const ao = connect()
     const mid = await ao.message({
         process: constants.APM_PROCESS,
         data: vendor,

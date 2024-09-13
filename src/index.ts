@@ -11,7 +11,8 @@ import pkg from "../package.json"
 import init from "./commands/init";
 import registerVendor from "./commands/register-vendor";
 import download from "./commands/download";
-import { publish, update } from "./commands/publish";
+import publish from "./commands/publish";
+import web from "./commands/web";
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
@@ -19,9 +20,10 @@ program.command("menu").description("Show main menu").action(menu)
 program.command("init").description("Create new package boilerplate").action(init)
 program.command("register-vendor").description("Register a new vendor").action(registerVendor)
 program.command("publish").description("Publish a package").action(publish)
-program.command("update").description("Update an existing package").action(update)
+// program.command("update").description("Update an existing package").action(update)
 program.command("download").description("Download an existing package").action(download)
     .argument("<package-name>", "Package name to download")
+program.command("web").description("Open APM web interface").action(web)
 
 if (process.argv.length === 2)
     process.argv.splice(2, 0, 'menu')
@@ -54,8 +56,9 @@ async function menu(): Promise<void> {
         INIT: "Create new package boilerplate",
         REGISTER_VENDOR: "Register a new vendor",
         PUBLISH: "Publish a package",
-        UPDATE: "Update an existing package",
+        // UPDATE: "Update an existing package",
         DOWNLOAD: "Download an existing package",
+        WEB: "Open APM web interface",
         EXIT: "Exit",
     })
 
@@ -78,10 +81,12 @@ async function menu(): Promise<void> {
             return await registerVendor()
         case MenuOptions.PUBLISH:
             return await publish()
-        case MenuOptions.UPDATE:
-            return await update()
+        // case MenuOptions.UPDATE:
+        //     return await update()
         case MenuOptions.DOWNLOAD:
             return await download()
+        case MenuOptions.WEB:
+            return await web()
         case MenuOptions.EXIT:
         default:
             return
