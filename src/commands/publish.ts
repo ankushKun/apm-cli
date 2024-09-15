@@ -7,11 +7,21 @@ import inquirer from 'inquirer'
 import constants from '../constants'
 import ora from 'ora'
 import terminalLink from 'terminal-link'
+import { execSync } from 'child_process'
+
+function checkIfCommitted() {
+    const status = execSync('git status --porcelain').toString().trim()
+    if (status !== '') {
+        return false
+    } else {
+        return true
+    }
+}
 
 
 
 export default async function publish() {
-
+    if (!checkIfCommitted()) return console.error(chalk.red("Please commit your changes before publishing"))
 
     if (!fs.existsSync("./apm.json")) return console.error(chalk.red("apm.json file not found"))
     const apmConfig = JSON.parse(fs.readFileSync("apm.json", 'utf-8')) as APMConfigJSON

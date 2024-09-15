@@ -162,23 +162,26 @@ export default async function init() {
             fs.writeFileSync("README.md", constants.defaults.readme(pkgData.name))
 
         // @ts-ignore
-        const initGit = await inquirer.prompt([
-            {
-                type: "confirm",
-                name: "initGit",
-                message: "Initialize git repository?",
-                default: true
-            }
-        ])
+        // const initGit = await inquirer.prompt([
+        //     {
+        //         type: "confirm",
+        //         name: "initGit",
+        //         message: "Initialize git repository?",
+        //         default: true
+        //     }
+        // ])
+
+        // initialise git repository by default
 
         console.log()
 
-        if (initGit.initGit) {
+        // if (initGit.initGit) {
+        if (true) {
             execSync("git init")
             execSync("git add .")
-            execSync("git commit -m 'Initialise ao package'")
+            execSync("git commit -m 'initialise ao package'")
             fs.writeFileSync(".gitignore", constants.defaults.gitignore)
-            console.log(chalk.green("✅ git repository initialized"))
+            // console.log(chalk.green("✅ git repository initialized"))
         }
 
         console.log(chalk.green("✅ apm package boilerplate created"))

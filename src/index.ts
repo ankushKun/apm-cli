@@ -13,6 +13,7 @@ import registerVendor from "./commands/register-vendor";
 import download from "./commands/download";
 import publish from "./commands/publish";
 import web, { bundleForWeb } from "./commands/web";
+import { major, minor, patch } from "./commands/version";
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
@@ -25,6 +26,10 @@ program.command("download").description("Download an existing package").action(d
     .argument("<package-name>", "Package name to download")
 program.command("web").description("Open APM web interface").action(web)
 program.command("bundle").description("Bundle source for web").action(bundleForWeb)
+program.command("version").description("Bump version before publishing")
+    .addCommand(program.command("major").description("Bump major version").action(major))
+    .addCommand(program.command("minor").description("Bump minor version").action(minor))
+    .addCommand(program.command("patch").description("Bump patch version").action(patch))
 
 if (process.argv.length === 2)
     process.argv.splice(2, 0, 'menu')
