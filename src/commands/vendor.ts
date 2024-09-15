@@ -11,9 +11,7 @@ const vendorBlocklist = [
     "apm", "ao", "admin", "root", "system", "vendor", "vendors", "package", "packages"
 ]
 
-export default async function registerVendor(name?: string) {
-
-
+export async function registerVendor(name?: string) {
     // @ts-ignore
     const { vendor } = await inquirer.prompt([
         {

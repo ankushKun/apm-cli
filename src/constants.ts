@@ -1,5 +1,5 @@
 export default {
-        APM_PROCESS: "zLdXeC7UvNXGGT0W4DbfcSPbnby6d9ZWba1M4MkSZl8",
+        APM_PROCESS: "DKF8oXtPvh3q8s0fJFIeHFyHNM6oKrwMCUrPxEMroak",
 
         defaults: {
                 src: `-- Sample package structure

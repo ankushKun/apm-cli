@@ -9,7 +9,7 @@ import ora from "ora";
 
 import pkg from "../package.json"
 import init from "./commands/init";
-import registerVendor from "./commands/register-vendor";
+import { registerVendor } from "./commands/vendor";
 import download from "./commands/download";
 import publish from "./commands/publish";
 import web, { bundleForWeb } from "./commands/web";
