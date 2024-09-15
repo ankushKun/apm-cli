@@ -118,6 +118,7 @@
         "keywords",
         "license",
         "dependencies",
-        "warnings"
+        "warnings",
+        "repository"
     ]
 }

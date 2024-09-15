@@ -12,7 +12,7 @@ import init from "./commands/init";
 import registerVendor from "./commands/register-vendor";
 import download from "./commands/download";
 import publish from "./commands/publish";
-import web from "./commands/web";
+import web, { bundleForWeb } from "./commands/web";
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
 
@@ -24,6 +24,7 @@ program.command("publish").description("Publish a package").action(publish)
 program.command("download").description("Download an existing package").action(download)
     .argument("<package-name>", "Package name to download")
 program.command("web").description("Open APM web interface").action(web)
+program.command("bundle").description("Bundle source for web").action(bundleForWeb)
 
 if (process.argv.length === 2)
     process.argv.splice(2, 0, 'menu')

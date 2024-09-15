@@ -1,3 +1,4 @@
+import chalk, { Chalk } from 'chalk';
 import fs from 'fs';
 import path from 'path';
 
@@ -96,11 +97,15 @@ function exploreNodes(node: any, cwd: any) {
 
     const requirePattern = /(?<=(require( *)(\n*)(\()?( *)("|'))).*(?=("|'))/g;
     const requiredModules =
-        node.content.match(requirePattern)?.map((mod: any) => ({
-            name: mod,
-            path: path.join(cwd, mod.replace(/\./g, '/') + '.lua'),
-            content: undefined,
-        })) || [];
+        node.content.match(requirePattern)?.map((mod: any) => {
+            const p = path.join(cwd, mod.replace(/\./g, '/') + '.lua')
+            console.log(chalk.yellow(`Bundling ${p}`));
+            return ({
+                name: mod,
+                path: p,
+                content: undefined,
+            })
+        }) || [];
 
     return requiredModules;
 }

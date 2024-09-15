@@ -11,6 +11,8 @@ import terminalLink from 'terminal-link'
 
 
 export default async function publish() {
+
+
     if (!fs.existsSync("./apm.json")) return console.error(chalk.red("apm.json file not found"))
     const apmConfig = JSON.parse(fs.readFileSync("apm.json", 'utf-8')) as APMConfigJSON
 
@@ -18,7 +20,7 @@ export default async function publish() {
     if (!apmConfig.vendor) return console.error(chalk.red(`vendor not found in apm.json`))
     if (!apmConfig.version) return console.error(chalk.red(`version not found in apm.json`))
     if (!apmConfig.description) return console.error(chalk.red(`description not found in apm.json`))
-    // if (!apmConfig.repository) return console.error(chalk.red(`repository not found in apm.json`))
+    if (!apmConfig.repository) return console.error(chalk.red(`repository not found in apm.json`))
 
     const entrypoint = apmConfig.main
     if (!entrypoint) return console.error(chalk.red(`main entrypoint not found in apm.json`))
