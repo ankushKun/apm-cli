@@ -13,7 +13,7 @@ async function download_from_apm(packageName: string) {
 
     const res = await ao.dryrun({
         process: constants.APM_PROCESS,
-        tags: [{ name: "Action", value: "APM.PackageInfo" }],
+        tags: [{ name: "Action", value: "APM.Info" }],
         data: packageName?.toString()
     })
     const { Messages, Output } = res;
