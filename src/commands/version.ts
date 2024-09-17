@@ -1,6 +1,7 @@
 import chalk from "chalk"
 import fs from "fs"
 import { APMConfigJSON } from "../types/apm"
+import { execSync } from "child_process"
 
 export function major() {
     // major version bump
@@ -13,6 +14,8 @@ export function major() {
     version[2] = "0"
     apmConfig.version = version.join(".")
     fs.writeFileSync("apm.json", JSON.stringify(apmConfig, null, 4))
+    execSync("git add apm.json")
+    execSync(`git commit -m "Bumped version to ${apmConfig}"`)
     console.log(chalk.green(`Bumped version to ${apmConfig.version}`))
 }
 
@@ -26,6 +29,8 @@ export function minor() {
     version[2] = "0"
     apmConfig.version = version.join(".")
     fs.writeFileSync("apm.json", JSON.stringify(apmConfig, null, 4))
+    execSync("git add apm.json")
+    execSync(`git commit -m "Bumped version to ${apmConfig}"`)
     console.log(chalk.green(`Bumped version to ${apmConfig.version}`))
 }
 
@@ -38,5 +43,7 @@ export function patch() {
     version[2] = (parseInt(version[2]) + 1).toString()
     apmConfig.version = version.join(".")
     fs.writeFileSync("apm.json", JSON.stringify(apmConfig, null, 4))
+    execSync("git add apm.json")
+    execSync(`git commit -m "Bumped version to ${apmConfig}"`)
     console.log(chalk.green(`Bumped version to ${apmConfig.version}`))
 }
