@@ -8,6 +8,7 @@ import constants from '../constants'
 import ora from 'ora'
 import terminalLink from 'terminal-link'
 import { execSync } from 'child_process'
+import { json } from 'stream/consumers'
 
 function checkIfCommitted() {
     const status = execSync('git status --porcelain').toString().trim()
@@ -21,7 +22,7 @@ function checkIfCommitted() {
 
 
 export default async function publish() {
-    if (!checkIfCommitted()) return console.error(chalk.red("Please commit your changes before publishing"))
+    // if (!checkIfCommitted()) return console.error(chalk.red("Please commit your changes before publishing"))
 
     if (!fs.existsSync("./apm.json")) return console.error(chalk.red("apm.json file not found"))
     const apmConfig = JSON.parse(fs.readFileSync("apm.json", 'utf-8')) as APMConfigJSON
@@ -90,18 +91,18 @@ export default async function publish() {
         { name: "Keywords", value: JSON.stringify(apmConfig.keywords || []) },
         { name: "Authors", value: JSON.stringify(apmConfig.authors || []) },
         // convert bundledSrc and Readme to hex encoded string
-        {
-            name: "Data", value: JSON.stringify({
-                bundle: Buffer.from(bundledSrc).toString('hex'),
-                readme: Buffer.from(readme).toString('hex')
-            })
-        },
+        // {
+        //     name: "Data", value: JSON.stringify({
+        //         bundle: Buffer.from(bundledSrc).toString('hex'),
+        //         readme: Buffer.from(readme).toString('hex')
+        //     })
+        // },
     ]
 
     // print number of bytes of every value in tags
-    tags.forEach(t => {
-        console.log(chalk.dim(`${t.name}: ${Buffer.from(t.value).length} bytes`))
-    })
+    // tags.forEach(t => {
+    //     console.log(chalk.dim(`${t.name}: ${Buffer.from(t.value).length} bytes`))
+    // })
 
     const ao = connect()
 
@@ -110,6 +111,10 @@ export default async function publish() {
         process: constants.APM_PROCESS,
         signer: createDataItemSigner(JWK),
         tags,
+        data: JSON.stringify({
+            source: bundledSrc,
+            readme: readme
+        })
     })
 
     publishSpinner.text = "Message sent, fetching result"
