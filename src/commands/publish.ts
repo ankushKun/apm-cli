@@ -98,6 +98,11 @@ export default async function publish() {
         },
     ]
 
+    // print number of bytes of every value in tags
+    tags.forEach(t => {
+        console.log(chalk.dim(`${t.name}: ${Buffer.from(t.value).length} bytes`))
+    })
+
     const ao = connect()
 
     const publishSpinner = ora("Publishing package").start()
