@@ -89,10 +89,13 @@ export default async function publish() {
         { name: "Warnings", value: JSON.stringify(apmConfig.warnings || {}) },
         { name: "Keywords", value: JSON.stringify(apmConfig.keywords || []) },
         { name: "Authors", value: JSON.stringify(apmConfig.authors || []) },
-        // convert bundledSrc to hex encoded string
-        { name: "Source", value: bundledSrc },
-        // convert readme to hex encoded string
-        { name: "Readme", value: readme },
+        // convert bundledSrc and Readme to hex encoded string
+        {
+            name: "Data", value: JSON.stringify({
+                bundle: Buffer.from(bundledSrc).toString('hex'),
+                readme: Buffer.from(readme).toString('hex')
+            })
+        },
     ]
 
     const ao = connect()
