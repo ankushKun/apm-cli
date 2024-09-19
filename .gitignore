@@ -5,6 +5,8 @@ out
 node_modules
 apm_modules
 test-pkg
-bin/fonts
+bin/fonts/*
+!bin/fonts/Sub-Zero.flf
 wallet.json
 client
+.DS_Store
