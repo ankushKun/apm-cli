@@ -45,7 +45,7 @@ export type APMConfigJSON = {
     main: string
     version: string
     keywords: string[]
-    authors: {
+    authors?: {
         address: string
         name: string
         email: string

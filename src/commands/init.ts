@@ -5,6 +5,7 @@ import inquirer from 'inquirer'
 import { execSync } from 'child_process'
 import constants from '../constants'
 import { APMConfigJSON } from '../types/apm'
+import ora from 'ora'
 
 
 export default async function init() {
@@ -119,24 +120,6 @@ export default async function init() {
 
     }
 
-    if (!fs.existsSync("wallet.json")) {
-        // @ts-ignore
-        const create = await inquirer.prompt([
-            {
-                type: "confirm",
-                name: "create",
-                message: "Wallet not found. Create a new wallet?",
-                default: true
-            }
-        ])
-        if (create.create) {
-            execSync("npx -y @permaweb/wallet > wallet.json")
-            console.log(chalk.green("✅ Wallet created"))
-            pkgData.wallet = "./wallet.json"
-        } else {
-            console.log(`Skipped wallet creation. Run ${chalk.red("npx -y @permaweb/wallet > wallet.json")} to create a new wallet and set its path in apm.json`)
-        }
-    }
 
     console.log("\n", chalk.blueBright(JSON.stringify(pkgData, null, 4)), "\n")
 
@@ -155,6 +138,27 @@ export default async function init() {
             fs.mkdirSync(in1.name)
             process.chdir(in1.name)
         }
+
+        if (!fs.existsSync("wallet.json")) {
+            // @ts-ignore
+            const create = await inquirer.prompt([
+                {
+                    type: "confirm",
+                    name: "create",
+                    message: "Wallet not found. Create a new wallet?",
+                    default: true
+                }
+            ])
+            if (create.create) {
+                const loader = ora("Creating wallet")
+                execSync("npx -y @permaweb/wallet > wallet.json")
+                loader.succeed("✅ Wallet created")
+                pkgData.wallet = "./wallet.json"
+            } else {
+                console.log(`Skipped wallet creation. Run ${chalk.red("npx -y @permaweb/wallet > wallet.json")} to create a new wallet and set its path in apm.json`)
+            }
+        }
+
         fs.writeFileSync("apm.json", JSON.stringify(pkgData, null, 4))
         if (!fs.existsSync("source.lua"))
             fs.writeFileSync("source.lua", constants.defaults.src)
