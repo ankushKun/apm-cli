@@ -4,6 +4,7 @@ import commander from "commander"
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { connect, createDataItemSigner } from '@permaweb/aoconnect'
+import { appState } from '../state'
 import constants from '../constants'
 import { Tag } from '../types/apm'
 
@@ -63,7 +64,7 @@ export async function registerVendor(name?: string) {
 
     const spinner = ora(`Registering vendor ${chalk.green(vendor)}`).start()
 
-    const ao = connect()
+    const ao = appState.cuUrl ? connect({ CU_URL: appState.cuUrl }) : connect()
     const mid = await ao.message({
         process: constants.APM_PROCESS,
         data: vendor,

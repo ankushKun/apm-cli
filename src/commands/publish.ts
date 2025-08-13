@@ -9,6 +9,7 @@ import ora from 'ora'
 import terminalLink from 'terminal-link'
 import { execSync } from 'child_process'
 import { json } from 'stream/consumers'
+import { appState } from '../state'
 
 function checkIfCommitted() {
     const status = execSync('git status --porcelain').toString().trim()
@@ -22,7 +23,7 @@ function checkIfCommitted() {
 
 
 export default async function publish() {
-    // if (!checkIfCommitted()) return console.error(chalk.red("Please commit your changes before publishing"))
+    if (!checkIfCommitted()) return console.error(chalk.red("Please commit your changes before publishing"))
 
     if (!fs.existsSync("./apm.json")) return console.error(chalk.red("apm.json file not found"))
     const apmConfig = JSON.parse(fs.readFileSync("apm.json", 'utf-8')) as APMConfigJSON
@@ -104,7 +105,7 @@ export default async function publish() {
     //     console.log(chalk.dim(`${t.name}: ${Buffer.from(t.value).length} bytes`))
     // })
 
-    const ao = connect()
+    const ao = appState.cuUrl ? connect({ CU_URL: appState.cuUrl }) : connect()
 
     const publishSpinner = ora("Publishing package").start()
     const pkgId = await ao.message({

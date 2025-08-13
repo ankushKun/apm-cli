@@ -3,7 +3,6 @@
 import { program } from "commander"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import figlet from "figlet"
 import terminalLink from 'terminal-link';
 import ora from "ora";
 
@@ -14,8 +13,19 @@ import download from "./commands/download";
 import publish from "./commands/publish";
 import web, { bundleForWeb } from "./commands/web";
 import { major, minor, patch } from "./commands/version";
+import { appState } from "./state";
 
 program.name("apm-cli").description(pkg.description).version(pkg.version)
+program.option("--cu-url <url>", "Custom Compute Unit URL")
+
+program.hook('preAction', (_thisCommand, actionCommand) => {
+    const opts = program.opts() as { cuUrl?: string }
+    if (opts.cuUrl) appState.cuUrl = opts.cuUrl
+    // Show CU URL for non-menu commands so users know it will be used
+    if (appState.cuUrl && actionCommand?.name() !== 'menu') {
+        console.log("\n\n" + chalk.cyanBright("Using custom CU:") + " " + chalk.white(appState.cuUrl) + "\n")
+    }
+})
 
 program.command("menu").description("Show main menu").action(menu)
 program.command("init").description("Create new package boilerplate").action(init)
@@ -31,8 +41,17 @@ program.command("version").description("Bump version before publishing")
     .addCommand(program.command("minor").description("Bump minor version").action(minor))
     .addCommand(program.command("patch").description("Bump patch version").action(patch))
 
-if (process.argv.length === 2)
-    process.argv.splice(2, 0, 'menu')
+// If no explicit subcommand is given (only global options like --cu-url), default to menu
+{
+    const args = process.argv.slice(2)
+    const knownCommands = new Set(program.commands.map(c => c.name()))
+    const hasKnownCommand = args.some(a => knownCommands.has(a))
+    const wantsHelpOrVersion = args.includes('-h') || args.includes('--help') || args.includes('-V') || args.includes('--version')
+    if (!hasKnownCommand && !wantsHelpOrVersion) {
+        // Keep global options before the command; append the default command at the end
+        process.argv.push('menu')
+    }
+}
 
 program.parse(process.argv)
 
@@ -40,11 +59,21 @@ async function header({ clear = false } = {}) {
     clear && console.clear()
     console.log(
         chalk.green(
-            figlet.textSync("APM CLI", {
-                font: "Sub-Zero",
-                horizontalLayout: "fitted",
-            })
-        ), "\n", "Made with ♥ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  [v${pkg.version}]\n`)
+            `
+ ▄▄▄       ██▓███   ███▄ ▄███▓
+▒████▄    ▓██░  ██▒▓██▒▀█▀ ██▒
+▒██  ▀█▄  ▓██░ ██▓▒▓██    ▓██░
+░██▄▄▄▄██ ▒██▄█▓▒ ▒▒██    ▒██ 
+ ▓█   ▓██▒▒██▒ ░  ░▒██▒   ░██▒
+ ▒▒   ▓▒█░▒▓▒░ ░  ░░ ▒░   ░  ░
+  ▒   ▒▒ ░░▒ ░     ░  ░      ░
+  ░   ▒   ░░       ░      ░   
+      ░  ░                ░                        
+`
+        ), "\n Made with ♥ by", chalk.greenBright(terminalLink("BetterIDEa", "https://betteridea.dev")), `team\t\t\t  [v${pkg.version}]\n`)
+    if (appState.cuUrl) {
+        console.log(chalk.cyanBright(" Using custom Compute Unit:") + " " + chalk.white(appState.cuUrl) + "\n")
+    }
     const updateSpinner = ora().start()
 
     const res = await fetch("https://registry.npmjs.org/apm-tool").then(res => res.json())

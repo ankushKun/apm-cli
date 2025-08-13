@@ -4,11 +4,12 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import ora from 'ora';
 import { connect } from '@permaweb/aoconnect';
+import { appState } from '../state';
 import { APMPackage, TDependencies } from '../types/apm';
 import constants from '../constants';
 
 async function download_from_apm(packageName: string) {
-    const ao = connect()
+    const ao = appState.cuUrl ? connect({ CU_URL: appState.cuUrl }) : connect()
     const spinner = ora(`Fetching ${packageName}`).start()
 
     const res = await ao.dryrun({
